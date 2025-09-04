@@ -1,0 +1,220 @@
+---
+title: "Procesamiento de datos"
+format: html
+editor: source
+---
+## Procesamiento de los datos
+
+```{r}
+library(tidyverse)
+library(dplyr)
+```
+
+
+```{r}
+# Datos de las muestras de sangre de las personas
+muestras_path = "../data/ensanut2022_muestras.csv" 
+muestras = read_csv2(ensanut_muestras_path)
+
+# Datos sociodemográficos de las personas
+demo_path = "../data/ensanut2022_socdem.csv"
+demo = read_csv2(demo_path)
+
+# Datos de la calidad del aire
+aire_path = "../data/calidad_aire_2025.csv"
+aire = read.csv(aire_path)
+```
+
+```{r}
+head(muestras, n = 100)
+```
+
+```{r}
+head(demo, n = 1000)
+```
+
+```{r}
+head(aire, n = 100)
+```
+
+
+
+
+
+
+Crearemos un dataframe con las variables que queremos usar.
+
+##### Ensanut demo
+- de id
+- Entidad
+- Municipio
+
+#### Aire 
+- Entidad federativa
+- Municipio
+- SO_2	
+- CO	
+- NOx	
+- COV	
+- PM_010	
+- PM_2_5	
+- NH_3
+
+##### ensanut muestras
+- valor_ALBU: Resultado  Albúmina g/dL
+- valor_COL_HDL: Resultado  Colesterol HDL mg/dl
+- valor_COL_LDL: Resultado  Colesterol LDL mg/dl
+- valor_CREAT: Resultado  Creatinina mg/dl              
+- valor_GLU_SUERO: Resultado  Glucosa mg/dl
+- valor_INSULINA: Resultado  Insulina micro UI/ml
+- valor_PCR: Resultado  Proteína C Reactiva mg/dL
+- valor_TRIG: Resultado  Triglicéridos mg/dl
+- valor_HB1AC: Resultado  Hemoglobina glucosilada. %
+
+
+
+
+```{r}
+demo = demo %>% select(FOLIO_INT, entidad1, municipio1)
+head(demo)
+```
+
+```{r}
+aire = aire %>% select(Entidad_federativa, Municipio, SO_2, CO, NOx, COV,                           PM_010, PM_2_5, NH_3)
+head(aire)
+```
+
+```{r}
+muestras = muestras %>% select(FOLIO_INT, 
+                               valor_ALBU,
+                               valor_COL_HDL,
+                               valor_COL_LDL,
+                               valor_CREAT,
+                               valor_GLU_SUERO,
+                               valor_INSULINA,
+                               valor_PCR,
+                               valor_TRIG,
+                               valor_EAG,
+                               valor_HB1AC
+                               )
+head(muestras)
+```
+
+```{r}
+summary(muestras)
+```
+
+```{r}
+muestras = muestras %>%
+  filter(!is.na(valor_ALBU) & !is.na(valor_HB1AC ))
+```
+
+```{r}
+colSums(is.na(muestras))        # cantidad de NAs por columna
+# colSums(!is.na(muestras))       # cantidad de no NAs por columna
+```
+
+# Data frame con estado, municipio e id, de cada registro
+
+Primero se necesita convertir los valores de cada estado a número y luego de cada municipio a número
+
+
+```{r}
+aire$Entidad_federativa = as.numeric(factor(aire$Entidad_federativa, 
+                                               levels = sort(unique(aire$Entidad_federativa))))
+```
+
+```{r}
+aire = aire |>
+  group_by(Entidad_federativa) |>
+  mutate(Municipio = as.numeric(factor(Municipio, 
+                                           levels = sort(unique(Municipio))))) %>%
+  ungroup()
+```
+
+```{r}
+aire = aire |>
+  group_by(Entidad_federativa, Municipio) |>
+  summarise(
+    across(where(is.numeric), ~mean(.x, na.rm = TRUE), .names = "{col}")
+  )
+```
+```{r}
+head(aire)
+```
+
+```{r}
+head(muestras)
+```
+
+```{r}
+nrow(muestras)
+```
+
+```{r}
+data <- demo |>
+  inner_join(muestras, by = "FOLIO_INT") |>
+  select(-FOLIO_INT)
+```
+
+```{r}
+head(data)
+```
+
+```{r}
+data$entidad1 = as.numeric(factor(data$entidad1, 
+                                               levels = sort(unique(data$entidad1))))
+```
+
+```{r}
+data = data |>
+  group_by(entidad1) |>
+  mutate(municipio1 = as.numeric(factor(municipio1, 
+                                           levels = sort(unique(municipio1))))) %>%
+  ungroup()
+```
+
+```{r}
+
+data = data |>
+  left_join(
+    aire,
+    by = c("entidad1" = "Entidad_federativa", "municipio1" = "Municipio")
+  ) |>
+  select(-entidad1, -municipio1)
+```
+
+```{r}
+head(data)
+```
+
+```{r}
+sum(is.na(data))
+```
+
+```{r}
+data <- na.omit(data)
+```
+
+```{r}
+sum(is.na(data))
+```
+
+```{r}
+head(data)
+```
+
+
+```{r}
+write.csv(data, "../data/data.csv", row.names = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
