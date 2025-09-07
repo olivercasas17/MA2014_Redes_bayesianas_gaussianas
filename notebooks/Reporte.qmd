@@ -113,6 +113,67 @@ score_aic_dag1
 
 DAG 2:
 
+```{r}
+dag2 = empty.graph(nodes = c("ALB", "HDL", "LDL", "TRI", "GLU", "INS", "PCR", 
+                              "HB1AC", "EAG", "CR", 
+                              "SO2", "CO", "NOx", "COV", "PM10", "PM2.5", "NH3"))
+
+```
+
+```{r}
+arc_set2 = matrix(c(
+  # --- Contaminantes -> PCR (inflamación)
+  "SO2", "PCR",
+  "NOx", "PCR",
+  "COV", "PCR",
+  "PM10", "PCR",
+  "PM2.5", "PCR",
+  "CO", "PCR",
+  "NH3", "PCR",
+
+  # --- PCR -> Albúmina (inflamación reduce albúmina)
+  "PCR", "ALB",
+
+  # --- NH3 y CO -> Creatinina (daño renal)
+  "NH3", "CR",
+  "CO", "CR",
+
+  # --- Glucosa -> Insulina y HbA1c
+  "GLU", "INS",
+  "GLU", "HB1AC",
+
+  # --- HbA1c -> Glucosa Promedio Estimada
+  "HB1AC", "EAG",
+
+  # --- Insulina -> lípidos
+  "INS", "HDL",
+  "INS", "LDL",
+  "INS", "TRI",
+
+  # --- Glucosa relacionada indirectamente con lípidos vía insulina
+  # Relación ya cubierta arriba (GLU -> INS -> Lípidos)
+  
+  # --- PCR como indicador de inflamación sistémica (opcional conexión a GLU)
+  "PCR", "GLU"
+), byrow = TRUE, ncol = 2,
+dimnames = list(NULL, c("from", "to")))
+```
+
+```{r}
+# 3. Asignar arcos al grafo
+arcs(dag2) = arc_set2
+```
+
+```{r}
+# 4. Revisar estructura del DAG
+dag2
+```
+
+```{r}
+# 5. Graficar DAG
+graphviz.plot(dag2, shape = "ellipse")
+```
+
 DAG 3:
 
 
