@@ -14,7 +14,7 @@ library(dplyr)
 ```{r}
 # Datos de las muestras de sangre de las personas
 muestras_path = "../data/ensanut2022_muestras.csv" 
-muestras = read_csv2(ensanut_muestras_path)
+muestras = read_csv2(muestras_path)
 
 # Datos sociodemográficos de las personas
 demo_path = "../data/ensanut2022_socdem.csv"
