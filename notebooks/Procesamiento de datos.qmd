@@ -38,10 +38,6 @@ head(aire, n = 100)
 ```
 
 
-
-
-
-
 Crearemos un dataframe con las variables que queremos usar.
 
 ##### Ensanut demo
@@ -75,12 +71,12 @@ Crearemos un dataframe con las variables que queremos usar.
 
 
 ```{r}
-demo = demo %>% select(FOLIO_INT, entidad1, municipio1)
+demo = demo %>% select(FOLIO_INT, entidad1, municipio1, h0302)
 head(demo)
 ```
 
 ```{r}
-aire = aire %>% select(Entidad_federativa, Municipio, SO_2, CO, NOx, COV,                           PM_010, PM_2_5, NH_3)
+aire = aire %>% select(Entidad_federativa, Municipio, Tipo_de_Fuente, SO_2,                         CO, NOx, COV, PM_010, PM_2_5, NH_3)
 head(aire)
 ```
 
@@ -105,7 +101,7 @@ summary(muestras)
 ```
 
 ```{r}
-muestras = muestras %>%
+muestras = muestras |>
   filter(!is.na(valor_ALBU) & !is.na(valor_HB1AC ))
 ```
 
@@ -133,15 +129,26 @@ aire = aire |>
 ```
 
 ```{r}
+conflicts_prefer(dplyr::filter)
+
 aire = aire |>
-  group_by(Entidad_federativa, Municipio) |>
-  summarise(
-    across(where(is.numeric), ~mean(.x, na.rm = TRUE), .names = "{col}")
-  )
+  filter(Tipo_de_Fuente == "Fuentes fijas")
 ```
+
 ```{r}
 head(aire)
 ```
+
+```{r}
+nrow(aire)
+```
+
+```{r}
+colSums(is.na(aire))
+```
+
+
+
 
 ```{r}
 head(muestras)
@@ -203,10 +210,32 @@ sum(is.na(data))
 ```{r}
 head(data)
 ```
+```{r}
+nrow(data)
+```
 
+```{r}
+data = data |> 
+ select(-Tipo_de_Fuente)
+```
+
+```{r}
+data_M = data |> 
+ filter(h0302 == 1)
+ 
+data_F = data |> 
+ filter(h0302 == 2)
+ 
+data = data |> 
+ select(-h0302)
+```
 
 ```{r}
 write.csv(data, "../data/data.csv", row.names = FALSE)
+
+write.csv(data_M, "../data/data_M.csv", row.names = FALSE)
+
+write.csv(data_F, "../data/data_F.csv", row.names = FALSE)
 ```
 
 
