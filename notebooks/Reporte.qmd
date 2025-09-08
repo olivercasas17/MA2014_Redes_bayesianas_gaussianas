@@ -1,35 +1,58 @@
 ---
-title: "Articulo"
+title: "Redes bayesianas gaussianas"
+author:
+  - name: "Oliver Arturo Casas Pontanillo | A01645764"
+  - name: "Erik Abraham Jajan Díaz | A01644648"
+  - name: "José Luis Santos Montaño | A01781721"
+date: today
 format:
-  html:
+  pdf:
+    code-block-bg: true
+    code-block-border-left: true
+    code-block-wrap: true
     toc: true
-    html-math-method: katex
-    embed-resources: true
-    self-contained-math: true
-    df-print: kable
-editor: source
+    toc-depth: 3
+    number-sections: true
+    number-depth: 3
+    fontsize: 11pt
+    linestretch: 1.5
+    geometry: margin=2.5cm
+    papersize: a4
+    fig-width: 6
+    fig-height: 4
+    fig-pos: "H"
+    code-line-numbers: true
+    keep-tex: true
+    documentclass: article
+    mainfont: Times New Roman
+    monofont: Courier New
+    sansfont: Arial
+header-includes:
+  - \usepackage{fvextra}
+  - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines=true,breakanywhere=true,commandchars=\\\{\}}
+editor:
+  source: true
+  markdown:
+    wrap: 72
 ---
 
-##Abstract
+## Abstract
+Esta investigación examina las relaciones entre contaminantes atmosféricos y biomarcadores de salud mediante redes bayesianas gaussianas. Utilizando datos de ENSANUT 2022 y calidad del aire de SEMARNAT, se modelaron las dependencias entre siete contaminantes (SO₂, CO, NOₓ, PM10, PM2.5, COV, NH₃) y diez biomarcadores sanguíneos. Se construyeron tres DAGs alternativos y se seleccionó el modelo óptimo mediante criterios AIC y BIC. Los resultados proporcionan evidencia cuantitativa del impacto de la contaminación atmosférica en biomarcadores metabólicos, lipídicos e inflamatorios, contribuyendo al diseño de políticas de salud ambiental.
 
-##Introduccion
-Diversos estudios han demostrado que la exposicion cronica a contaminantes atmosfericos se asocia con un aumento en enfermedades respiratorias, cardiovasculares y metabolicas. Estos efectos usualmente se manifiestas en biomarcadores biologicos, los cuales permitan que se evalue de manera indirecta el impacto de los contaminante en la salud de las personas.\ 
-Las redes bayesianas gaussianas nos permiten modelar las dependencias probabilisticas entre varaibles y generar representaciones graficas. En este caso, el uso de los datos provenientes de la encuesta nacional ENSANUT 2022, que ofrecen informacion detallada sobre muestras de sangre e informacion sociodemografica, ademas de informacion actualizada de la SEMARNAT sobre los contaminantes del aire, nos permitiran *plantear como hipotesis que los contaminantes atmosfericos tienen un efecto significativo sobre determinados biomarcadores de salud.* \ 
-Comprender como interactuan factores ambientales con los biomarcadores de salud de la poblacion genera un impacto importante, ya que puede contribuir al diseno de politicas publicas orientadas a la prevencion y mitigacion de los efectos de la contaminacion atmosferica.
-tbc..
+## Introducción
+Diversos estudios han demostrado que la exposición crónica a contaminantes atmosféricos se asocia con un aumento en enfermedades respiratorias, cardiovasculares y metabólicas. Estos efectos usualmente se manifiestan en biomarcadores biológicos, los cuales permiten que se evalúe de manera indirecta el impacto de los contaminantes en la salud de las personas.\ 
+Las redes bayesianas gaussianas nos permiten modelar las dependencias probabilísticas entre variables y generar representaciones gráficas. En este caso, el uso de los datos provenientes de la encuesta nacional ENSANUT 2022, que ofrecen información detallada sobre muestras de sangre e información sociodemográfica, además de información actualizada de la SEMARNAT sobre los contaminantes del aire, nos permitirán *plantear como hipótesis que los contaminantes atmosféricos tienen un efecto significativo sobre determinados biomarcadores de salud.* \ 
+Comprender cómo interactúan factores ambientales con los biomarcadores de salud de la población genera un impacto importante, ya que puede contribuir al diseño de políticas públicas orientadas a la prevención y mitigación de los efectos de la contaminación atmosférica.
 
-##Metodologia
-El trabajo sigue un enfoque cuantitativo, exploratorio, explicativo e interdisciplinario, analizando las relaciones que tienen contaminantes del aire con biomarcadores de salud en la poblacion, utilizando redes bayesianas gaussianas para representar estas relaciones de variables continuas.\ 
-
-Inicialmente, se realizo una limpieza de la base de datos para extraer las variables con datos continuos relevantes para nuestro estudio, ademas de asegurarnos de que los datos estuvieran en un formato con el que pudieramos trabajar.\ 
-Basandonos en informacion proporcionada por especialistas, se propusieron tres gráficos acíclicos dirigidos, por sus siglas en ingles DAGs, para posteriormente comparar las 3 DAGs con metricas estadisticas, y seleccionar la mejor de las tres para continuar con el analisis. \ 
-Se incluyo la variable una variable categorica especifica, en este caso sexo, y con ayuda de los especialistas en el tema se escogieron tres queries nos llevarian a conclusiones prometedoras\ 
-
-Las principales tecnicas que se utilizaron en este trabajo fueron: \ 
+## Metodología
+El trabajo sigue un enfoque cuantitativo, exploratorio, explicativo e interdisciplinario, analizando las relaciones que tienen contaminantes del aire con biomarcadores de salud en la población, utilizando redes bayesianas gaussianas para representar estas relaciones de variables continuas.\ 
+Inicialmente, se realizó una limpieza de la base de datos para extraer las variables con datos continuos relevantes para nuestro estudio, además de asegurarnos de que los datos estuvieran en un formato con el que pudiéramos trabajar.\ 
+Basándonos en información proporcionada por especialistas, se propusieron tres gráficos acíclicos dirigidos, por sus siglas en inglés DAGs, para posteriormente comparar las 3 DAGs con métricas estadísticas, y seleccionar la mejor de las tres para continuar con el análisis. \ 
+Se incluyó una variable categórica específica, en este caso sexo, y con ayuda de los especialistas en el tema se escogieron tres queries que nos llevarían a conclusiones prometedoras\ 
+Las principales técnicas que se utilizaron en este trabajo fueron: \ 
 Análisis de redes bayesianas gaussianas, construyendo grafos acíclicos dirigidos para modelar relaciones de dependencia entre variables continuas\ 
-Evaluacion de modelos, usando metodos estadisticos como el Criterio de Informacion de AKaike y el Criterio de Informacion Bayesiano, AIC y BIC por sus siglas en ingles.\ 
-Inferencia probabilistica, consultas condicionales para estimar probabilidades bajo evidencia\ 
-
+Evaluación de modelos, usando métodos estadísticos como el Criterio de Información de Akaike y el Criterio de Información Bayesiano, AIC y BIC por sus siglas en inglés.\ 
+Inferencia probabilística, consultas condicionales para estimar probabilidades bajo evidencia\ 
 Los datos utilizados fueron los siguientes:\ 
 data.csv\ 
 data_F.csv\ 
@@ -38,12 +61,10 @@ Los datos crudos fueron recolectados de:\
 calidad_aire_2025.csv\ 
 ensanut2022_muestras.csv\ 
 ensanut2022_socdem.csv\ 
-
 Las herramientas que utilizamos fueron las siguientes:\ 
-Lenguaje de programacion R\ 
-Librerias: tidyverse, bnlearn, Rgraphviz\ 
+Lenguaje de programación R\ 
+Librerías: tidyverse, bnlearn, Rgraphviz\ 
 Entorno de trabajo R Studio
-
 ##Aplicacion
 
 ```{r}
@@ -52,7 +73,7 @@ library(bnlearn)
 ```
 
 ```{r}
-data = read_csv("../data/data.csv") #ya que el oliver termine los datos
+data = read_csv("../data/data.csv")
 head(data)
 ```
 
@@ -128,56 +149,35 @@ dag2 = empty.graph(nodes = c("ALB", "HDL", "LDL", "TRI", "GLU", "INS", "PCR",
 ```
 
 ```{r}
-arc_set2 = matrix(c(
-  # --- Contaminantes -> PCR (inflamación)
-  "SO2", "PCR",
-  "NOx", "PCR",
-  "COV", "PCR",
-  "PM10", "PCR",
-  "PM2.5", "PCR",
-  "CO", "PCR",
-  "NH3", "PCR",
-
-  # --- PCR -> Albúmina (inflamación reduce albúmina)
-  "PCR", "ALB",
-
-  # --- NH3 y CO -> Creatinina (daño renal)
-  "NH3", "CR",
-  "CO", "CR",
-
-  # --- Glucosa -> Insulina y HbA1c
-  "GLU", "INS",
-  "GLU", "HB1AC",
-
-  # --- HbA1c -> Glucosa Promedio Estimada
-  "HB1AC", "EAG",
-
-  # --- Insulina -> lípidos
-  "INS", "HDL",
-  "INS", "LDL",
-  "INS", "TRI",
-
-  # --- Glucosa relacionada indirectamente con lípidos vía insulina
-  # Relación ya cubierta arriba (GLU -> INS -> Lípidos)
-  
-  # --- PCR como indicador de inflamación sistémica (opcional conexión a GLU)
-  "PCR", "GLU"
-), byrow = TRUE, ncol = 2,
-dimnames = list(NULL, c("from", "to")))
+arc_set2 = matrix(c("SO2", "PCR",
+                    "NOx", "PCR",
+                    "COV", "PCR",
+                    "PM10", "PCR",
+                    "PM2.5", "PCR",
+                    "CO", "PCR",
+                    "NH3", "PCR",
+                    "PCR", "ALB",
+                    "NH3", "CR",
+                    "CO", "CR",
+                    "GLU", "INS",
+                    "GLU", "HB1AC",
+                    "HB1AC", "EAG",
+                    "INS", "HDL",
+                    "INS", "LDL",
+                    "INS", "TRI",
+                    "PCR", "GLU"), byrow = TRUE, ncol = 2,
+                  dimnames = list(NULL, c("from", "to")))
 ```
 
 ```{r}
-# 3. Asignar arcos al grafo
 arcs(dag2) = arc_set2
 ```
 
 ```{r}
-# 4. Revisar estructura del DAG
 dag2
 ```
 
 ```{r}
-# 5. Graficar DAG
 graphviz.plot(dag2, shape = "ellipse")
 ```
 
@@ -231,7 +231,6 @@ arcs(dag3) = arc_set3
 graphviz.plot(dag3, shape = "ellipse")
 ```
 
-
 ```{r}
 gbn3 = bn.fit(dag3, data = data)
 ```
@@ -257,10 +256,8 @@ tabla_scores <- data.frame(
 tabla_scores
 
 ```
-Podemos observar que la DAG1 es la presenta un menor error por lo que va a ser la que usaremos en el resto del analisis.
-
-
-Una forma de agregar una variable categorica, en este caso sexo, a la red gaussiana seria recodificando la variable para volverla continua, o separar nuestra base de datos en una de hombres y una de mujeres, trabajarlas por separado, y ver como cambian las relaciones en ambas y comparar los resultados de las inferencias condicionales que realicemos, este metodo es el que realizaremos.
+Podemos observar que la DAG1 es la que presenta un menor error por lo que va a ser la que usaremos en el resto del análisis.
+Una forma de agregar una variable categórica, en este caso sexo, a la red gaussiana sería recodificando la variable para volverla continua, o separar nuestra base de datos en una de hombres y una de mujeres, trabajarlas por separado, y ver cómo cambian las relaciones en ambas y comparar los resultados de las inferencias condicionales que realicemos, este método es el que realizaremos.
 
 ```{r}
 data_M = read_csv("../data/data_M.csv")
@@ -269,32 +266,28 @@ colnames(data_M) <- c("ALB", "HDL", "LDL", "CR", "GLU", "INS", "PCR", "TRI", "HB
 colnames(data_F) <- c("ALB", "HDL", "LDL", "CR", "GLU", "INS", "PCR", "TRI", "HB1AC", "EAG", "SO2", "CO", "NOx", "COV", "PM10", "PM2.5", "NH3")
 ```
 
-
 ```{r}
 gbn_masc = bn.fit(dag1, data = data_M)
 gbn_fem = bn.fit(dag1, data = data_F)
 ```
 
-```{r}
-colnames(data_F)
-```
-
-
 Queries:
-1. Cual es la probabilidad de que una persona tenga los Trigliceridos saludables dado que estan expuestas a altos niveles de NOx
+1. ¿Cuál es la probabilidad de que una persona tenga los triglicéridos saludables dado que están expuestas a altos niveles de NOx?
 ```{r}
 cpquery(gbn1, event = (TRI < 200), evidence = (NOx > quantile(data$NOx, 0.8)), n=10^6)
 ```
-Cual seria la probabilidad sin condicion?
+
+¿Cuál sería la probabilidad sin condición?
 ```{r}
 cpquery(gbn1, event = (TRI < 200), evidence = TRUE, n=10^6)
 ```
 
-2. Cual es la probabilidad de que los niveles de glucosa sean saludables en mujeres expuestas a altos niveles niveles de COV y PM2.5?
+2. ¿Cuál es la probabilidad de que los niveles de glucosa sean saludables en mujeres expuestas a altos niveles de COV y PM2.5?
 ```{r}
 cpquery(gbn_fem, event = (GLU < 100), evidence = (COV > quantile(data$COV, 0.8) & PM2.5 > 500), n=10^6)
 ```
-Cual seria la probabilidad sin condicion?
+
+¿Cuál sería la probabilidad sin condición?
 ```{r}
 cpquery(gbn_fem, event = (GLU < 100), evidence = TRUE, n=10^6)
 ```
@@ -303,15 +296,16 @@ cpquery(gbn_fem, event = (GLU < 100), evidence = TRUE, n=10^6)
 ```{r}
 cpquery(gbn1, event = (HB1AC < 6), evidence = (CO > quantile(data$CO, 0.8)), n=10^6)
 ```
-Cual seria la probabilidad sin condicion?
+¿Cuál sería la probabilidad sin condición?
 ```{r}
 cpquery(gbn1, event = (HB1AC < 6), evidence = TRUE, n=10^6)
 ```
 
-En general podemos observa que las probabilidades cambian muy poco, por lo que podemos concluir que los contaminantes del aire no tienen impacto en los biomarcadores de las personas
+En general podemos observar que las probabilidades cambian muy poco, por lo que podemos concluir que los contaminantes del aire no tienen impacto en los biomarcadores de las personas.
 
-Incluir modelos no parametricos puede ayudar a mejorar el BIC y el AIC si las relaciones entre los datos son no lineales o no gaussianas, ya que los modelos no parametricos permiten mas flexibilidad en las distribuciones condicionales lo que permite capturar relaciones no lineales.\ 
-Sin embargo este acercamiento necesita una gran cantidad de datos para evitar un sobreajuste y suele ser mas dificil de interpretar.
+Incluir modelos no paramétricos puede ayudar a mejorar el BIC y el AIC si las relaciones entre los datos son no lineales o no gaussianas, ya que los modelos no paramétricos permiten más flexibilidad en las distribuciones condicionales, lo que permite capturar relaciones no lineales.
+
+Sin embargo, este acercamiento necesita una gran cantidad de datos para evitar un sobreajuste y suele ser más difícil de interpretar.
 
 ##Conclusiones
 
