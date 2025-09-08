@@ -30,14 +30,17 @@ format:
 header-includes:
   - \usepackage{fvextra}
   - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines=true,breakanywhere=true,commandchars=\\\{\}}
+  - \RecustomVerbatimEnvironment{Verbatim}{Verbatim}{breaklines=true,breakanywhere=true,frame=single}
 editor:
   source: true
   markdown:
     wrap: 72
 ---
 
+https://github.com/olivercasas17/MA2014_Redes_bayesianas_gaussianas
+
 ## Abstract
-Esta investigación examina las relaciones entre contaminantes atmosféricos y biomarcadores de salud mediante redes bayesianas gaussianas. Utilizando datos de ENSANUT 2022 y calidad del aire de SEMARNAT, se modelaron las dependencias entre siete contaminantes (SO₂, CO, NOₓ, PM10, PM2.5, COV, NH₃) y diez biomarcadores sanguíneos. Se construyeron tres DAGs alternativos y se seleccionó el modelo óptimo mediante criterios AIC y BIC. Los resultados proporcionan evidencia cuantitativa del impacto de la contaminación atmosférica en biomarcadores metabólicos, lipídicos e inflamatorios, contribuyendo al diseño de políticas de salud ambiental.
+Esta investigación examina las relaciones entre contaminantes atmosféricos y biomarcadores de salud mediante redes bayesianas gaussianas. Utilizando datos de ENSANUT 2022 y calidad del aire de SEMARNAT, se modelaron las dependencias entre siete contaminantes y diez biomarcadores sanguíneos. Se construyeron tres DAGs alternativos y se seleccionó el modelo óptimo mediante criterios AIC y BIC. Los resultados proporcionan evidencia cuantitativa del impacto de la contaminación atmosférica en biomarcadores metabólicos, lipídicos e inflamatorios, contribuyendo al diseño de políticas de salud ambiental.
 
 ## Introducción
 Diversos estudios han demostrado que la exposición crónica a contaminantes atmosféricos se asocia con un aumento en enfermedades respiratorias, cardiovasculares y metabólicas. Estos efectos usualmente se manifiestan en biomarcadores biológicos, los cuales permiten que se evalúe de manera indirecta el impacto de los contaminantes en la salud de las personas.\ 
@@ -65,14 +68,15 @@ Las herramientas que utilizamos fueron las siguientes:\
 Lenguaje de programación R\ 
 Librerías: tidyverse, bnlearn, Rgraphviz\ 
 Entorno de trabajo R Studio
-##Aplicacion
 
-```{r}
+## Aplicacion
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(bnlearn)
 ```
 
-```{r}
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
 data = read_csv("../data/data.csv")
 head(data)
 ```
@@ -115,10 +119,6 @@ arc_set1 = matrix(c("TRI", "LDL",
 
 ```{r}
 arcs(dag1) = arc_set1
-```
-
-```{r}
-dag1
 ```
 
 ```{r}
@@ -171,10 +171,6 @@ arc_set2 = matrix(c("SO2", "PCR",
 
 ```{r}
 arcs(dag2) = arc_set2
-```
-
-```{r}
-dag2
 ```
 
 ```{r}
@@ -259,7 +255,7 @@ tabla_scores
 Podemos observar que la DAG1 es la que presenta un menor error por lo que va a ser la que usaremos en el resto del análisis.
 Una forma de agregar una variable categórica, en este caso sexo, a la red gaussiana sería recodificando la variable para volverla continua, o separar nuestra base de datos en una de hombres y una de mujeres, trabajarlas por separado, y ver cómo cambian las relaciones en ambas y comparar los resultados de las inferencias condicionales que realicemos, este método es el que realizaremos.
 
-```{r}
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
 data_M = read_csv("../data/data_M.csv")
 data_F = read_csv("../data/data_F.csv")
 colnames(data_M) <- c("ALB", "HDL", "LDL", "CR", "GLU", "INS", "PCR", "TRI", "HB1AC", "EAG", "SO2", "CO", "NOx", "COV", "PM10", "PM2.5", "NH3")
@@ -307,6 +303,10 @@ Incluir modelos no paramétricos puede ayudar a mejorar el BIC y el AIC si las r
 
 Sin embargo, este acercamiento necesita una gran cantidad de datos para evitar un sobreajuste y suele ser más difícil de interpretar.
 
-##Conclusiones
+## Conclusiones
+Se construyeron tres modelos (DAGs) y, mediante los criterios AIC y BIC, se seleccionó la estructura más adecuada. Sin embargo, los resultados de las consultas condicionales mostraron que los cambios en la probabilidad de presentar biomarcadores saludables ante altos niveles de contaminantes fueron mínimos. Esto sugiere que, bajo los supuestos del modelo, los contaminantes no presentan un impacto directo fuerte sobre los biomarcadores analizados.
 
-##Referencias
+Una posible explicación es la limitación de las redes gaussianas, que asumen relaciones lineales y distribuciones normales, lo cual puede no reflejar la complejidad real de las interacciones entre contaminación y salud. Para futuros trabajos, se recomienda el uso de modelos no paramétricos o híbridos, así como bases de datos más amplias que incluyan variables contextuales como hábitos de vida y condiciones socioeconómicas. Aunque no se encontraron efectos significativos, la metodología implementada constituye una base sólida para estudios posteriores y puede convertirse en una herramienta útil para el diseño de políticas públicas orientadas a la prevención de enfermedades relacionadas con la contaminación.
+
+## Referencias
+https://www.jstatsoft.org/article/view/v035i03
