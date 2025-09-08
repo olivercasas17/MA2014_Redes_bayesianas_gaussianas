@@ -8,6 +8,7 @@ editor: source
 ```{r}
 library(tidyverse)
 library(dplyr)
+library(conflicted)
 ```
 
 
@@ -221,10 +222,12 @@ data = data |>
 
 ```{r}
 data_M = data |> 
- filter(h0302 == 1)
+ filter(h0302 == 1) |>
+  select(-h0302)
  
 data_F = data |> 
- filter(h0302 == 2)
+ filter(h0302 == 2) |>
+  select(-h0302)
  
 data = data |> 
  select(-h0302)
@@ -237,6 +240,7 @@ write.csv(data_M, "../data/data_M.csv", row.names = FALSE)
 
 write.csv(data_F, "../data/data_F.csv", row.names = FALSE)
 ```
+
 
 
 

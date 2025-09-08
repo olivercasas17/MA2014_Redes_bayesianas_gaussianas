@@ -29,9 +29,15 @@ Las principales tecnicas que se utilizaron en este trabajo fueron: \
 Análisis de redes bayesianas gaussianas, construyendo grafos acíclicos dirigidos para modelar relaciones de dependencia entre variables continuas\ 
 Evaluacion de modelos, usando metodos estadisticos como el Criterio de Informacion de AKaike y el Criterio de Informacion Bayesiano, AIC y BIC por sus siglas en ingles.\ 
 Inferencia probabilistica, consultas condicionales para estimar probabilidades bajo evidencia\ 
-tbc...
 
-datos...
+Los datos utilizados fueron los siguientes:\ 
+data.csv\ 
+data_F.csv\ 
+data_M.csv\ 
+Los datos crudos fueron recolectados de:\ 
+calidad_aire_2025.csv\ 
+ensanut2022_muestras.csv\ 
+ensanut2022_socdem.csv\ 
 
 Las herramientas que utilizamos fueron las siguientes:\ 
 Lenguaje de programacion R\ 
@@ -48,6 +54,10 @@ library(bnlearn)
 ```{r}
 data = read_csv("../data/data.csv") #ya que el oliver termine los datos
 head(data)
+```
+
+```{r}
+colnames(data) <- c("ALB", "HDL", "LDL", "CR", "GLU", "INS", "PCR", "TRI", "HB1AC", "EAG", "SO2", "CO", "NOx", "COV", "PM10", "PM2.5", "NH3")
 ```
 
 ```{r}
@@ -89,20 +99,22 @@ arcs(dag1) = arc_set1
 ```{r}
 dag1
 ```
+
 ```{r}
 graphviz.plot(dag1, shape = "ellipse")
 ```
+
 ```{r}
 gbn1 = bn.fit(dag1, data = data)
 ```
 
 ```{r}
-score_bic_dag1 = score(gbn1, data = data, type = "bic")
+score_bic_dag1 = score(dag1, data = data, type = "bic-g")
 score_bic_dag1
 ```
 
 ```{r}
-score_aic_dag1 = score(gbn1, data = data, type = "aic")
+score_aic_dag1 = score(dag1, data = data, type = "aic-g")
 score_aic_dag1
 ```
 
@@ -169,6 +181,20 @@ dag2
 graphviz.plot(dag2, shape = "ellipse")
 ```
 
+```{r}
+gbn2 = bn.fit(dag2, data = data)
+```
+
+```{r}
+score_bic_dag2 = score(dag2, data = data, type = "bic-g")
+score_bic_dag2
+```
+
+```{r}
+score_aic_dag2 = score(dag2, data = data, type = "aic-g")
+score_aic_dag2
+```
+
 DAG 3:
 
 ```{r}
@@ -201,9 +227,23 @@ arc_set3 = matrix(c("SO2", "PCR",
 arcs(dag3) = arc_set3
 ```
 
-
 ```{r}
 graphviz.plot(dag3, shape = "ellipse")
+```
+
+
+```{r}
+gbn3 = bn.fit(dag3, data = data)
+```
+
+```{r}
+score_bic_dag3 = score(dag3, data = data, type = "bic-g")
+score_bic_dag3
+```
+
+```{r}
+score_aic_dag3 = score(dag3, data = data, type = "aic-g")
+score_aic_dag3
 ```
 
 ```{r}
@@ -217,11 +257,58 @@ tabla_scores <- data.frame(
 tabla_scores
 
 ```
+Podemos observar que la DAG1 es la presenta un menor error por lo que va a ser la que usaremos en el resto del analisis.
 
 
-Una forma de agregar una variable categorica, en este caso sexo, a la red gaussiana seria recodificando la variable para volverla continua, o separar nuestra base de datos en una de hombres y una de mujeres, trabajarlas por separado, y ver como cambian las relaciones en ambas y comparar los resultados de las inferencias condicionales que realicemos
+Una forma de agregar una variable categorica, en este caso sexo, a la red gaussiana seria recodificando la variable para volverla continua, o separar nuestra base de datos en una de hombres y una de mujeres, trabajarlas por separado, y ver como cambian las relaciones en ambas y comparar los resultados de las inferencias condicionales que realicemos, este metodo es el que realizaremos.
+
+```{r}
+data_M = read_csv("../data/data_M.csv")
+data_F = read_csv("../data/data_F.csv")
+colnames(data_M) <- c("ALB", "HDL", "LDL", "CR", "GLU", "INS", "PCR", "TRI", "HB1AC", "EAG", "SO2", "CO", "NOx", "COV", "PM10", "PM2.5", "NH3")
+colnames(data_F) <- c("ALB", "HDL", "LDL", "CR", "GLU", "INS", "PCR", "TRI", "HB1AC", "EAG", "SO2", "CO", "NOx", "COV", "PM10", "PM2.5", "NH3")
+```
+
+
+```{r}
+gbn_masc = bn.fit(dag1, data = data_M)
+gbn_fem = bn.fit(dag1, data = data_F)
+```
+
+```{r}
+colnames(data_F)
+```
+
 
 Queries:
+1. Cual es la probabilidad de que una persona tenga los Trigliceridos saludables dado que estan expuestas a altos niveles de NOx
+```{r}
+cpquery(gbn1, event = (TRI < 200), evidence = (NOx > quantile(data$NOx, 0.8)), n=10^6)
+```
+Cual seria la probabilidad sin condicion?
+```{r}
+cpquery(gbn1, event = (TRI < 200), evidence = TRUE, n=10^6)
+```
+
+2. Cual es la probabilidad de que los niveles de glucosa sean saludables en mujeres expuestas a altos niveles niveles de COV y PM2.5?
+```{r}
+cpquery(gbn_fem, event = (GLU < 100), evidence = (COV > quantile(data$COV, 0.8) & PM2.5 > 500), n=10^6)
+```
+Cual seria la probabilidad sin condicion?
+```{r}
+cpquery(gbn_fem, event = (GLU < 100), evidence = TRUE, n=10^6)
+```
+
+3. Cual es la probabilidad de que un hombre tenga un valor saludable de hemoglobina glucosilada dado que estan expuestos a altos niveles de CO
+```{r}
+cpquery(gbn1, event = (HB1AC < 6), evidence = (CO > quantile(data$CO, 0.8)), n=10^6)
+```
+Cual seria la probabilidad sin condicion?
+```{r}
+cpquery(gbn1, event = (HB1AC < 6), evidence = TRUE, n=10^6)
+```
+
+En general podemos observa que las probabilidades cambian muy poco, por lo que podemos concluir que los contaminantes del aire no tienen impacto en los biomarcadores de las personas
 
 Incluir modelos no parametricos puede ayudar a mejorar el BIC y el AIC si las relaciones entre los datos son no lineales o no gaussianas, ya que los modelos no parametricos permiten mas flexibilidad en las distribuciones condicionales lo que permite capturar relaciones no lineales.\ 
 Sin embargo este acercamiento necesita una gran cantidad de datos para evitar un sobreajuste y suele ser mas dificil de interpretar.
