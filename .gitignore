@@ -52,3 +52,4 @@ rsconnect/
 /data
 
 .Rproj
+.DS_Store

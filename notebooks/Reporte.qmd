@@ -41,11 +41,6 @@ Entorno de trabajo R Studio
 ##Aplicacion
 
 ```{r}
-install.packages("tidyverse")
-install.packages("bnlearn")
-```
-
-```{r}
 library(tidyverse)
 library(bnlearn)
 ```
@@ -176,6 +171,40 @@ graphviz.plot(dag2, shape = "ellipse")
 
 DAG 3:
 
+```{r}
+dag3 = empty.graph(nodes = c("ALB", "HDL", "LDL", "CR", "GLU",                                  "INS", "PCR", "TRI", "HB1AC", 
+                             "EAG", "SO2", "CO", "NOx", "COV",                                  "PM10", "PM2.5", "NH3"))
+```
+
+```{r}
+arc_set3 = matrix(c("SO2", "PCR",
+                    "CO", "PCR",
+                    "NOx", "PCR",
+                    "COV", "PCR",
+                    "PM10", "PCR",
+                    "PM2.5", "PCR",
+                    "NH3", "PCR",
+                    "PCR", "ALB",
+                    "PCR", "LDL",
+                    "PCR", "HDL",
+                    "PCR", "TRI",
+                    "PCR", "CR",
+                    "PM2.5", "GLU",
+                    "CO", "GLU",
+                    "GLU", "INS",
+                    "GLU", "HB1AC",
+                    "HB1AC", "EAG"), byrow = TRUE, ncol = 2,
+                  dimnames = list(NULL, c("from", "to")))
+```
+
+```{r}
+arcs(dag3) = arc_set3
+```
+
+
+```{r}
+graphviz.plot(dag3, shape = "ellipse")
+```
 
 ```{r}
 #tabla con los scores de las dag para que se vea bonita la comparacion
